@@ -1,0 +1,90 @@
+QUEUE.H
+#pragma once
+typedef int t;
+const int maxsize = 50;
+class Queue 
+{
+private:
+	t qlist[maxsize];
+	int front, rear, count;
+
+public:
+	Queue();
+	void insert(t&);
+	t qdelete();
+	void clear();
+	t getFront() const;
+	bool empty() const;
+	bool full() const;
+	int length() const;
+};
+
+
+
+QUEUE.CPP
+#include <iostream>
+#include "Queue.h"
+using namespace std;
+
+Queue::Queue()
+	: count(0)
+	, rear(0)
+	, front(0) {}
+
+void Queue::insert(t& item) 
+{
+	if (count == maxsize)
+	{
+		cerr << "Queue is full" << endl;
+		exit(1);
+	}
+	++count;
+	qlist[rear] = item;
+	rear = (rear + 1) % maxsize;
+}
+
+t Queue::qdelete()
+{
+	t temp;
+	if (count == 0) 
+	{
+		cerr << "Queue is empty" << endl;
+		exit(1);
+	}
+	temp = qlist[front];
+	--count;
+	front = (front + 1) % maxsize;
+	return temp;
+}
+
+void Queue::clear() 
+{
+	count = 0;
+	front = 1;
+	rear = 1;
+}
+
+t Queue::getFront() const 
+{
+	if (count == 0) 
+	{
+		cerr << "Queue is empty" << endl;
+		exit(1);
+	}
+	return qlist[front];
+}
+
+bool Queue::empty() const 
+{
+	return count == 0;
+}
+
+bool Queue::full() const
+{
+	return count == maxsize;
+}
+
+int Queue::length() const 
+{
+	return count;
+}
