@@ -1,0 +1,147 @@
+LIST.H
+#pragma once
+
+template <class T>
+struct Node
+{
+	T info;
+	Node<T>* link;
+};
+
+template <class T>
+class List 
+{
+public: List();
+		List(const List&);
+		~List();
+		bool isEmpty() const;
+		int GetLength() const;
+		Node<T>* GetFirst() const;
+		void InsertAfter(Node<T>*, T);
+		void InsertAt(int, T);
+		void DeleteAfter(Node<T>*);
+		void DeleteAt(int);
+		T& GetData(Node<T>*);
+
+private: 
+	Node<T>* first;
+	int size;
+};
+
+
+
+LIST.CPP
+#include <iostream>
+#include "List.h"
+using namespace std;
+
+template <class T>
+List <T>::List()
+	:size(0)
+	,first(NULL){}
+
+template <class T>
+List<T>::List(const List& l)
+{
+	Node<T>* p = new Node<T>;
+	Node<T>* p1 = l.first;
+	GetData(p) = l.GetData(p1);
+	first = p;
+	first->link = NULL;
+	for (int i = 0; i < l.GetLength() - 1; ++i) 
+	{
+		p1 = p1->link;
+		InsertAfter(p, l.GetData(p1));
+		p = p->link;
+	}
+	size = l.size;
+}
+
+template <class T>
+List<T>::~List() 
+{
+	if (first) 
+	{
+		while (first->link) DeleteAfter(first);
+		delete first;
+		first = 0;
+	}
+	size = 0;
+}
+
+template <class T>
+bool List<T>::isEmpty() const { return size == 0; }
+
+template <class T>
+int List<T>::GetLength() const { return size; }
+
+template <class T>
+Node<T>* List<T>::GetFirst() const { return first; }
+
+template <class T>
+void List<T>::InsertAfter(Node<T>* p, T item) 
+{
+	Node<T>* q = new Node<T>;
+	q->info = item;
+	q->link = p->link;
+	p->link = q;
+	++size;
+}
+
+template <class T>
+void List<T>::InsertAt(int n, T item) 
+{
+	if (n < 0 || n > GetLength()) throw "position out of range";
+	if (n == 0) 
+	{
+		Node<T>* q = new Node<T>;
+		q->info = item;
+		q->link = first;
+		first = q;
+		++size;
+		return;
+	}
+	Node<T>* p = first;
+	for (int i = 0; i < n - 1; ++i) p = p->link;
+	InsertAfter(p, item);
+
+}
+
+template <class T>
+void List<T>::DeleteAfter(Node<T>* p) 
+{
+	if (isEmpty) throw "List is empty";
+	if (p->link == NULL) throw "No element to delete";
+	Node<T>* q = p->link;
+	p->link = q->link;
+	delete q;
+	--size;
+	return;
+
+}
+
+template <class T>
+void List<T>::DeleteAt(int n) 
+{
+	if (n<0 || n>GetLength()) throw "position is out of range";
+	if (n == 0 && GetLength() != 0) 
+	{
+		Node<T>* q = first;
+		first = first->link;
+		delete q;
+		--size;
+		return;
+	}
+	Node<T>* q = first;
+	for (int i = 0; i < n-1; ++i) 
+	{
+		q = q->link;
+	}
+	DeleteAfter(q);
+}
+
+template <class T>
+T& List<T>::GetData(Node<T>* p) 
+{
+	return p->info;
+}
