@@ -1,0 +1,61 @@
+STACK.H
+#pragma once
+const int maxsize = 50;
+typedef int t;
+class Stack 
+{
+private:
+	t stacklist[maxsize];
+	int top;
+
+public:
+	Stack();
+	void push(const t&);
+	t pop();
+	void clearstack();
+	t peek() const;
+	int stackempty() const;
+	int stackfull() const;
+
+};
+
+
+
+STACK.CPP
+#include <iostream>
+#include "Stack.h"
+using namespace std;
+
+Stack::Stack()
+	:top(-1) {}
+void Stack::push(const t& item) 
+{
+	if (top == maxsize) 
+	{
+		cerr << "Stack is full" << endl;
+		exit(1);
+	}
+	++top;
+	stacklist[top] = item;
+}
+
+t Stack::pop() 
+{
+	if (top < 0) 
+	{
+		cerr << "Stack is empty" << endl;
+		exit(1);
+	}
+	t temp = stacklist[top];
+	--top;
+	return temp;
+}
+
+void Stack::clearstack(void) { top = -1; }
+
+t Stack::peek() const { return stacklist[top]; }
+
+int Stack::stackempty() const { return top == -1; }
+
+int Stack::stackfull() const { return top == maxsize - 1; }
+
