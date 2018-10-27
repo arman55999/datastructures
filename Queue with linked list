@@ -1,0 +1,83 @@
+QUEUE.H
+
+template <class T>
+struct Node
+{
+  T info;
+  Node<T>* link;
+};
+
+template <class T>
+class Queue
+{
+private:  
+  Node<T> head;
+  Node<T>* first;
+  Node<T>* last;
+  
+public:
+  Queue(): first(&head), last(&head) {}
+  ~Queue();
+  void Insert (T);
+  void Delete ();
+  void GetFirst(T&);
+  bool Empty() const;
+};
+
+
+QUEUE.CPP
+template <class T>
+void Queue<T>::Insert(T item)
+{
+  Node<T>* p = new Node<T>
+  if(!p) throw "Overflow in heap";
+  p->info = item;
+  p->link = 0;
+  last->link = p;
+  last = p;  
+}
+
+template <class T>
+void Queue<T>::Delete()
+{
+  if(Empty()) throw "Queue is empty";
+  Node<T>* p = head.link;
+  head.link = p->link;
+  delete p;
+  if(head.link == 0) {
+    last = &head;
+    head.link = NULL;
+  }
+  return;
+}
+
+template <class T>
+bool Queue<T>::Empty() const 
+{
+  return last == &head;
+}
+
+template <class T>
+void Queue<T>::GetFirst(T& item)
+{
+  if(Empty()) throw "Queue is empty";
+  item = head.link -> info;
+  return;
+}
+
+template <class T>
+Queue<T>::~Queue()
+{
+  Node<T>* p;
+  if(first != last)
+  {
+    p = first->link;
+    while(p)
+    {
+      first->link = p->link
+      delete p;
+      p = first->link
+    }
+    last = first;
+  }
+}
