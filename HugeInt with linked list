@@ -1,0 +1,111 @@
+HUGEINT.H
+#pragma once
+#include <iostream>
+class Hugeinteger
+{
+	struct Node
+	{
+		int info_;
+		Node* link_;
+		Node(int info = NULL, Node* link = nullptr) 
+			:info_(info)
+			,link_(link) {}
+	};
+
+public:
+	Hugeinteger() : head_(new Node), size(0) {
+		last_ = head_;
+	}
+	Hugeinteger(int);
+	void print() const;
+	const Hugeinteger* Function1(int) const;
+	//~Hugeinteger();
+	void insert(int);
+	Hugeinteger operator+(const Hugeinteger&);
+private:
+	Node* head_;
+	Node* last_;
+	int size;
+
+};
+
+
+
+HUGEINT.CPP
+#include "Hugeinteger.h"
+
+Hugeinteger::Hugeinteger(int num)
+	: head_(new Node) 
+	, size(0)
+{
+	last_ = head_;
+	if (num == 0) 
+	{ 
+		insert(num); 
+		return;
+	}
+	while (num)
+	{
+		insert(num % 10);
+		num /= 10;
+	}
+}
+void Hugeinteger::insert(int item)
+{
+	Node* newNode = new Node(item, head_);
+	last_->link_ = newNode;
+	last_ = newNode;
+	++size;
+}
+
+void Hugeinteger::print() const
+{
+	int* arr = new int[size];
+	int i = 0;
+	for (Node* ptr = head_->link_; ptr != head_; ptr = ptr->link_)
+	{
+		arr[i++] = ptr->info_;
+	}
+
+	for (i = size - 1; i >= 0; --i)
+	{
+		std::cout << arr[i] << " ---> ";
+	}
+	std::cout << std::endl;
+}
+const Hugeinteger*  Hugeinteger::Function1(int n) const
+{
+	if (size < n)  return this;
+	return nullptr;
+}
+Hugeinteger Hugeinteger::operator+(const Hugeinteger& H1)
+{
+	int remain = 0; 
+	Hugeinteger B;
+	const Hugeinteger N1 = size < H1.size ? *this : H1;
+	const Hugeinteger N2 = size >= H1.size ? *this : H1;
+
+	Node* ptr1 = N2.head_->link_;
+	for (Node* ptr = N1.head_->link_; 
+		ptr != N1.last_->link_; 
+		ptr = ptr->link_, ptr1 = ptr1->link_)
+	{
+		int sum = ptr->info_ + ptr1->info_ + remain;
+		remain = sum / 10;
+		B.insert(sum % 10);
+	}
+
+	
+	for ( ; ptr1 != N2.last_->link_; ptr1 = ptr1->link_)
+	{
+		int sum = ptr1->info_ + remain;
+		remain = sum / 10;
+		B.insert(sum % 10);
+	}
+	
+	if (remain > 0) {
+		B.insert(remain);
+	}
+
+	return B;
+}
